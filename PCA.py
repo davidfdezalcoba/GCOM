@@ -12,6 +12,7 @@ class PCA_Reduction:
     def __init__(self):
         self.W = []
         self.projection = []
+        self.compression = []
         self.normalization = []
         self.D_p = 0
 
@@ -53,6 +54,17 @@ class PCA_Reduction:
             self.projection = np.dot(self.W.T, X)
         return self.projection
 
+    def getCompression(self, X):
+
+        if self.W == []:
+            print('W not computed yet!')
+            return
+        if self.compression == []:
+            mean = np.mean(X.T, axis = 0)
+            self.compression = np.vstack(mean) + self.W.dot(self.W.T.dot((X.T - mean).T))
+        return self.compression
+        
+
     def getNormalization(self, X):
         '''
         Returns normalized data
@@ -89,6 +101,7 @@ if __name__ == '__main__':
 
     # Get the projected data
     projection = cls.getProjection(X)
+    compression = cls.getCompression(X)
     normalization = cls.getNormalization(X)
 
     print('Original data is:\n')
@@ -96,6 +109,9 @@ if __name__ == '__main__':
     print('\nData has been reduced from %d to %d\n' %(D, cls.D_p))
     print('\nThe projected data is: \n')
     print(projection)
+    
+    print('\nCompressed data is:\n')
+    print(compression)
 
     print('\nNormalized data is:\n')
     print(normalization)
