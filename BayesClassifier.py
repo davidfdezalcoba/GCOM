@@ -33,7 +33,7 @@ class BayesClassifier:
         predictions = []
         for n in range(len(X.T)):
             predictions.append(np.argmin( \
-                [(X.T[n] - self.kmeans[k]).dot(np.linalg.inv(self.ksigmas[k])).dot((X.T[n] - self.kmeans[k]).T) + log(np.linalg.norm(self.ksigmas[k])) - 2*log(self.num_datos_clase_k[k] / len(X.T)) for k in range(len(self.kmeans))]))
+                [(X.T[n] - self.kmeans[k]).dot(np.linalg.inv(self.ksigmas[k])).dot((X.T[n] - self.kmeans[k]).T) + log(np.linalg.det(self.ksigmas[k])) - 2*log(self.num_datos_clase_k[k] / len(X.T)) for k in range(len(self.kmeans))]))
         return predictions
 
 if __name__ == '__main__':
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     colors = ['r', 'g', 'b', 'y', 'm', '#0ff0f0', '#112f1f', '#fff000']
     D = 2
     K = 4;
-    X,tags = create_Dd_data(D, K, 0.002, 0.2, 1300, 1400)
+    X,tags = create_Dd_data(D, K, 1, 0.2, 1300, 1400)
 
     # Shuffle data
     ds = list(zip(X.T,tags))
